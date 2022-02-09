@@ -2,9 +2,10 @@
 
 using namespace std;
 
-map<pair<unsigned int, Joueur>, Noeud<unsigned int>*> noeuds_plateaux;
+void genere_enfants(Noeud<unsigned int> *racine, map<pair<unsigned int, Joueur>, Noeud<unsigned int>*>* ensemble_plateaux) {
+	if (ensemble_plateaux == nullptr)
+		ensemble_plateaux = new map<pair<unsigned int, Joueur>, Noeud<unsigned int>*>();
 
-void genere_enfants(Noeud<unsigned int> *racine) {
 	unsigned int plateau = racine->get_plateau();
 	if (plateau == 0) {
 		// Le plateau est vide, c'est donc une feuille, on doit lui donner son score
@@ -28,23 +29,23 @@ void genere_enfants(Noeud<unsigned int> *racine) {
 
 		unsigned int prochain_plateau = racine->get_plateau() - i;
 
-		auto enfant = noeuds_plateaux.find(pair(prochain_plateau, prochain));
-		if (enfant == noeuds_plateaux.end()) {
+		auto enfant = ensemble_plateaux->find(pair(prochain_plateau, prochain));
+		if (enfant == ensemble_plateaux->end()) {
 			// Ce noeud n'existe pas, on le créé
 			// On créé le nouveau noeud
 			Noeud<unsigned int>* nouveau_noeud = new Noeud<unsigned int>(prochain_plateau, prochain);
+
+			ensemble_plateaux->insert(pair(pair(prochain_plateau, prochain), nouveau_noeud));
+
 			// Et on génère les enfants de ce nouveau noeud
-			genere_enfants(nouveau_noeud);
+			genere_enfants(nouveau_noeud, ensemble_plateaux);
 			// Enfin, on ajoute ce noeud à la racine actuelle
 			racine->ajoute_liaison(nouveau_noeud);
-
-			noeuds_plateaux.insert(pair(pair(prochain_plateau, prochain), nouveau_noeud));
 		}
 		else {
 			// Ce noeud existe déjà, on n'a qu'à lier vers ce noeud
 			racine->ajoute_liaison(enfant->second);
 		}
-
 	}
 }
 
@@ -60,8 +61,6 @@ Noeud<unsigned int>* coup_joueur(Noeud<unsigned int>* racine, unsigned int coup)
 
 void jeu(unsigned int nb, Noeud<unsigned int> *racine) {
 	unsigned int batonnets_actuels = nb;
-
-	cout << noeuds_plateaux.size() << endl;
 
 	bool fini = false;
 	Joueur J = Joueur::A; // L'IA commence toujours
