@@ -146,10 +146,12 @@
     <ClCompile Include="Arbre.cpp" />
     <ClCompile Include="Batonnets.cpp" />
     <ClCompile Include="IABruteForce.cpp" />
+    <ClCompile Include="Morpion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arbre.h" />
     <ClInclude Include="Batonnets.h" />
+    <ClInclude Include="Morpion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
